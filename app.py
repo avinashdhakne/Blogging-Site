@@ -1,11 +1,11 @@
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from flask_mail import Mail
 import json
 
 with open("config.json") as file:
     params = json.load(file)["params"]
-
 
 app = Flask(__name__)
 
@@ -15,6 +15,16 @@ else:
     app.config['SQLALCHEMY_DATABASE_URI'] = params["prod_URI"]
 
 db = SQLAlchemy(app)
+
+app.config.update(
+    MAIL_SERVER="smtp.gmail.com",
+    MAIL_PORT=465,
+    MAIL_USE_SSL=True,
+    MAIL_USERNAME=params["gmail-user"],
+    MAIL_PASSWORD=params["gmail-password"]
+)
+
+mail = Mail(app)
 
 
 class Contacts(db.Model):
@@ -42,7 +52,14 @@ def contact():
                          email=email, date=datetime.now())
         db.session.add(entry)
         db.session.commit()
-        print(name, phone, email, message)
+
+        mail.send_message(
+            "New mail from " + name,
+            sender=email,
+            recipients=[params["gmail-user"]],
+            body=message + '\n' + phone
+        )
+
     return render_template("contact.html", parameters=params)
 
 
