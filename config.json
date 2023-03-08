@@ -1,0 +1,12 @@
+{
+    "params":
+    {
+        "local_server": true,
+        "local_URI": "mysql+pymysql://root:@localhost/codingthunder",
+        "prod_URI": "mysql+pymysql://root:@localhost/codingthunder",
+        "fb_url": "https://www.facebook.com/",
+        "tw_url": "https://twitter.com/tweeter?lang=en",
+        "gh_url": "https://github.com/",
+        "blog_name": "Coding Thunder"
+    }
+}
