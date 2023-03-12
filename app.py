@@ -35,6 +35,13 @@ class Contacts(db.Model):
     date = db.Column(db.String(12), nullable=True)
     email = db.Column(db.String(20), nullable=False)
 
+class Posts(db.Model):
+    sno = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(20), nullable=False)
+    slug = db.Column(db.String(25), nullable=False)
+    author = db.Column(db.String(120), nullable=False)
+    img_name = db.Column(db.String(20), nullable=False)
+    date = db.Column(db.String(12), nullable=True)
 
 @app.route("/")
 def home():
@@ -68,9 +75,10 @@ def about():
     return render_template("about.html", parameters=params)
 
 
-@app.route("/post")
-def post():
-    return render_template("post.html", parameters=params)
+@app.route("/post/<string:post_slug>")
+def post_function(post_slug):
+    post = Posts.query.filter_by(slug=post_slug).first()
+    return render_template("post.html", parameters=params, post=post)
 
 
 if __name__ == "__main__":
